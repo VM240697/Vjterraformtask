@@ -7,7 +7,6 @@ stage('Clone Repository') {
 steps {
        git branch: 'main'
        url:https://github.com/VM240697/Vjterraformtask
-              }
  } 
 }  
 stage('Terraform Init') {  
