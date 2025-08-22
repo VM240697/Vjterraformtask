@@ -47,9 +47,15 @@ resource "azurerm_linux_virtual_machine_scale_set" "example" {
   location            = azurerm_resource_group.alert.location
   sku                 = "Standard_DS1_v2"
   instances           = 2
-  upgrade_policy_mode = "Automatic"
 
-  storage_image_reference {
+  admin_username = "adminuser"
+
+  automatic_os_upgrade_policy {
+    enable_automatic_os_upgrade = true
+    disable_automatic_rollback  = false
+  }
+
+  source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
     sku       = "16.04-LTS"
@@ -75,9 +81,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "example" {
 resource "azurerm_consumption_budget_resource_group" "example" {
   name              = "example-budget"
   resource_group_id = azurerm_resource_group.alert.id
-
-  amount     = 100
-  time_grain = "Monthly"
+  amount            = 100
+  time_grain        = "Monthly"
 
   time_period {
     start_date = "2024-01-01T00:00:00Z"
@@ -85,9 +90,8 @@ resource "azurerm_consumption_budget_resource_group" "example" {
 
   notification {
     enabled        = true
-    threshold      = 0.8
+    threshold      = 80 // Changed to a whole number
     operator       = "EqualTo"
     contact_emails = ["user@example.com"]
   }
 }
-
